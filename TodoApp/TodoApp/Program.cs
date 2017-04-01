@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO; //Allows program to read write files
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace TodoApp
 {
@@ -11,9 +13,11 @@ namespace TodoApp
     {
         static void Main(string[] args)
         {
+            //List<todo> todoList = new List<todo>();
+            List<todo> todoList = ReadFromXmlFile<List<todo>>(@"C:\Users\carls\Desktop\ToDo.xml");
             Console.WriteLine("Welcome to To-Do App!");
             Console.WriteLine("A command line based program to help track to-do list");
-            Console.WriteLine("Created by Carlsen \n \n \n");
+            Console.WriteLine("Created by Carlsen\n");
             while (true)
             {
                 int option = Menu();
@@ -42,6 +46,14 @@ namespace TodoApp
                 {
                     break;
                 }
+                else if (option == 5)
+                {
+                    ExperimentToDoAdd(todoList);
+                }
+                else if (option == 6)
+                {
+                    ViewExperimentToDo(todoList);
+                }
                 else
                 {
                     Console.WriteLine("git gud");
@@ -51,12 +63,19 @@ namespace TodoApp
 
         static int Menu()
         {
-            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("--------------------------------------------------------------------------------------------");
+            Console.WriteLine("                                       Main Menu                                            ");
+            Console.WriteLine("\nWhat would you like to do?");
             Console.WriteLine("1. Add new task to To-Do list");
             Console.WriteLine("2. View To-Do list");
             Console.WriteLine("3. Remove item from To-Do list");
             Console.WriteLine("4. Exit");
-            Console.Write("Select your option: ");
+            Console.WriteLine("\nEXPERIMENTAL SECTION!!!!");
+            Console.WriteLine("Note: All objects created and viewed in the section below are stored in a different file.\n");
+            Console.WriteLine("5. [EXPERIMENTAL!] Add new task to experimental To-Do list");
+            Console.WriteLine("6. [EXPERIMENTAL!] View experimental To-Do list");
+            Console.WriteLine("----------------------------------------------------------------------------------------------");
+            Console.Write("\nSelect your option: ");
             int option = Convert.ToInt32(Console.ReadLine());
             return option;
         }
@@ -68,6 +87,7 @@ namespace TodoApp
             file.WriteLine(task);
             Console.WriteLine("Closing File....(Step 3/3)");
             file.Close();
+            PostRun();
             return true;
         }
         
@@ -93,6 +113,7 @@ namespace TodoApp
 
                 file.Close();
                 Console.WriteLine("");
+                PostRun();
             }
         }
         
@@ -130,6 +151,92 @@ namespace TodoApp
             Console.WriteLine("Applying clean up hack.... \n");
             File.Delete(@"C:\Users\carls\Desktop\ToDo.txt");
             File.Move(@"C:\Users\carls\Desktop\ToDo2.txt", @"C:\Users\carls\Desktop\ToDo.txt");
+            PostRun();
+        }
+
+        static void ExperimentToDoAdd(List<todo>todoList)
+        {
+            Console.WriteLine("EXPERIMENTAL TODO LIST!!!\n");
+            Console.Write("Enter the title of the task: ");
+            string title = Console.ReadLine();
+            Console.Write("Enter the description of the task: ");
+            string desc = Console.ReadLine();
+            todo t;
+            t = new todo(title, desc);
+            todoList.Add(t);
+            WriteToXmlFile<List<todo>>(@"C:\Users\carls\Desktop\ToDo.xml", todoList);
+            PostRun();
+        }
+        static void ViewExperimentToDo(List<todo>todoList)
+        {
+            todo t;
+            Console.WriteLine("{0,-5}{1,-30}{2,-75}", "No.", "Title", "Description");
+            for (int i = 0; i < todoList.Count; i++)
+            {
+                t = todoList[i];
+                Console.WriteLine("{0,-5}{1,-30}{2,-75}", (i + 1) + ". ", t.Title, t.Desc);
+            }
+            PostRun();
+        }
+        /// <summary>
+        /// Writes the given object instance to an XML file.
+        /// <para>Only Public properties and variables will be written to the file. These can be any type though, even other classes.</para>
+        /// <para>If there are public properties/variables that you do not want written to the file, decorate them with the [XmlIgnore] attribute.</para>
+        /// <para>Object type must have a parameterless constructor.</para>
+        /// </summary>
+        /// <typeparam name="T">The type of object being written to the file.</typeparam>
+        /// <param name="filePath">The file path to write the object instance to.</param>
+        /// <param name="objectToWrite">The object instance to write to the file.</param>
+        /// <param name="append">If false the file will be overwritten if it already exists. If true the contents will be appended to the file.</param>
+        public static void WriteToXmlFile<T>(string filePath, T objectToWrite, bool append = false) where T : new()
+        {
+            TextWriter writer = null;
+            try
+            {
+                var serializer = new XmlSerializer(typeof(T));
+                writer = new StreamWriter(filePath, append);
+                serializer.Serialize(writer, objectToWrite);
+            }
+            finally
+            {
+                if (writer != null)
+                    writer.Close();
+            }
+        }
+
+        /// <summary>
+        /// Reads an object instance from an XML file.
+        /// <para>Object type must have a parameterless constructor.</para>
+        /// </summary>
+        /// <typeparam name="T">The type of object to read from the file.</typeparam>
+        /// <param name="filePath">The file path to read the object instance from.</param>
+        /// <returns>Returns a new instance of the object read from the XML file.</returns>
+        public static T ReadFromXmlFile<T>(string filePath) where T : new()
+        {
+            TextReader reader = null;
+            try
+            {
+                var serializer = new XmlSerializer(typeof(T));
+                reader = new StreamReader(filePath);
+                return (T)serializer.Deserialize(reader);
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+            }
+        }
+        static void PostRun()
+        {
+            Console.WriteLine("\nOperation Completed! Please select an option");
+            Console.WriteLine("1. Return to Main Menu");
+            Console.WriteLine("2. Exit");
+            Console.Write("Selection: ");
+            int option = Convert.ToInt32(Console.ReadLine());
+            if (option == 2)
+            {
+                Environment.Exit(0);
+            }
         }
     }
 }
