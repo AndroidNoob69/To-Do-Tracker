@@ -47,6 +47,10 @@ namespace TodoApp
                     WriteToXmlFile<List<todo>>(path + @"\ToDo.xml", todoList);
                     break;
                 }
+                else if (option == 5)
+                {
+                    ViewToDoDev(todoList);
+                }
                 else
                 {
                     Console.WriteLine("git gud");
@@ -65,7 +69,7 @@ namespace TodoApp
             Console.WriteLine("4. Exit");
             Console.WriteLine("\nEXPERIMENTAL SECTION!!!!");
             Console.WriteLine("Note: All objects created and viewed in the section below are stored in a different file.\n");
-            Console.WriteLine("Nothing for now....");
+            Console.WriteLine("5. Developmental Version of viewing To-Do list. Use this to view tasks with long descriptions");
             Console.WriteLine("----------------------------------------------------------------------------------------------");
             Console.Write("\nSelect your option: ");
             int option = Convert.ToInt32(Console.ReadLine());
@@ -87,7 +91,7 @@ namespace TodoApp
         static void ViewToDo(List<todo>todoList)
         {
             todo t;
-            Console.WriteLine("{0,-5}{1,-30}{2,-75}", "No.", "Title", "Description");
+            Console.WriteLine("\n{0,-5}{1,-30}{2,-75}", "No.", "Title", "Description");
             for (int i = 0; i < todoList.Count; i++)
             {
                 t = todoList[i];
@@ -170,6 +174,24 @@ namespace TodoApp
             else
                 Console.Clear();
                 postrun = 1;
+        }
+        static void ViewToDoDev(List<todo> todoList)
+        {
+            todo t;
+            Console.WriteLine("\n{0,-5}{1,-30}", "No.", "Title");
+            for (int i = 0; i < todoList.Count; i++)
+            {
+                t = todoList[i];
+                Console.WriteLine("{0,-5}{1,-30}", (i + 1) + ". ", t.Title);
+            }
+            Console.WriteLine("Which task do you want to view?");
+            Console.Write("\nSelect a task number: ");
+            int select = Convert.ToInt32(Console.ReadLine());
+            t = todoList[select - 1];
+            Console.WriteLine("\nTask Number " + select + "\t\tTitle: " + t.Title);
+            Console.WriteLine("\nDescription:\n" + t.Desc);
+            if (postrun == 1)
+                PostRun();
         }
     }
 }
