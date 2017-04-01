@@ -24,7 +24,6 @@ namespace TodoApp
             {
                 todoList = ReadFromXmlFile<List<todo>>(path + @"\ToDo.xml");
             }
-            //List<todo> todoList = ReadFromXmlFile<List<todo>>(@"C:\Users\carls\Desktop\ToDo.xml");
             Console.WriteLine("Welcome to To-Do App!");
             Console.WriteLine("A command line based program to help track to-do list");
             Console.WriteLine("Created by Carlsen\n");
@@ -33,43 +32,20 @@ namespace TodoApp
                 int option = Menu();
                 if (option == 1)
                 {
-                    Console.WriteLine("Please enter the description of the task to add \n");
-                    string task = Console.ReadLine();
-                    Console.WriteLine("Adding To-Do... \n \n");
-                    if (AddToDo(task) == true)
-                        Console.WriteLine("Task added to To-Do list! \n");
-                    else
-                        Console.WriteLine("An error has occured while adding object in To-Do list");
+                    ToDoAdd(todoList);
                 }
                 else if (option == 2)
                 {
-                    ReadFile();
+                    ViewToDo(todoList);
                 }
                 else if (option == 3)
                 {
-                    postrun = 0;
-                    ReadFile();
-                    postrun = 1;
-                    Console.Write("\nSelect the task number to delete: ");
-                    int remove = Convert.ToInt32(Console.ReadLine());
-                    RemoveToDo(remove);
+                    RemoveToDo(todoList);
                 }
                 else if (option == 4)
                 {
                     WriteToXmlFile<List<todo>>(path + @"\ToDo.xml", todoList);
                     break;
-                }
-                else if (option == 5)
-                {
-                    ExperimentToDoAdd(todoList);
-                }
-                else if (option == 6)
-                {
-                    ViewExperimentToDo(todoList);
-                }
-                else if (option == 7)
-                {
-                    RemoveExperimentToDo(todoList);
                 }
                 else
                 {
@@ -89,95 +65,14 @@ namespace TodoApp
             Console.WriteLine("4. Exit");
             Console.WriteLine("\nEXPERIMENTAL SECTION!!!!");
             Console.WriteLine("Note: All objects created and viewed in the section below are stored in a different file.\n");
-            Console.WriteLine("5. [EXPERIMENTAL!] Add new task to experimental To-Do list");
-            Console.WriteLine("6. [EXPERIMENTAL!] View experimental To-Do list");
-            Console.WriteLine("7. [EXPERIMENTAL!] Remove task from experimental To-Do list");
+            Console.WriteLine("Nothing for now....");
             Console.WriteLine("----------------------------------------------------------------------------------------------");
             Console.Write("\nSelect your option: ");
             int option = Convert.ToInt32(Console.ReadLine());
             return option;
         }
-        static bool AddToDo(string task)
+        static void ToDoAdd(List<todo>todoList)
         {
-            Console.WriteLine("Opening file....(Step 1/3)");
-            TextWriter file = new StreamWriter(@"C:\Users\carls\Desktop\ToDo.txt", true); //Hardcoded path, not recommended
-            Console.WriteLine("Writing to file....(Step 2/3)");
-            file.WriteLine(task);
-            Console.WriteLine("Closing File....(Step 3/3)");
-            file.Close();
-            if (postrun == 1)
-                PostRun();
-            return true;
-        }
-        
-        static void ReadFile()
-        {
-            if (new FileInfo(@"C:\Users\carls\Desktop\ToDo.txt").Length == 0)
-            {
-                Console.WriteLine("\nTo-Do is empty! WhooHoo!\n");
-            }
-            else
-            {
-                Console.WriteLine("\nTo-Do List: \n");
-                int counter = 0;
-                string line;
-
-                // Read the file and display it line by line.
-                StreamReader file = new StreamReader(@"C:\Users\carls\Desktop\ToDo.txt");
-                while ((line = file.ReadLine()) != null)
-                {
-                    Console.WriteLine((counter + 1) + ". " + line);
-                    counter++;
-                }
-
-                file.Close();
-                Console.WriteLine("");
-                if (postrun == 1)
-                    PostRun();
-            }
-        }
-        
-        static void RemoveToDo(int remove)
-        {
-            string line = null;
-            int line_number = 0;
-            int line_to_delete = remove;
-            int taskexists = 0;
-            Console.WriteLine("\nRemoving Task....");
-
-            using (StreamReader reader = new StreamReader(@"C:\Users\carls\Desktop\ToDo.txt"))
-            {
-                using (StreamWriter writer = new StreamWriter(@"C:\Users\carls\Desktop\ToDo2.txt"))
-                {
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        line_number++;
-
-                        if (line_number == line_to_delete)
-                        {
-                            Console.WriteLine("Task Found! Deleting.");
-                            taskexists = 1;
-                            continue;
-                        }
-                        
-                        writer.WriteLine(line);
-                    }
-                }
-            }
-            if (taskexists == 0)
-            {
-                Console.WriteLine("Specified task does not exist! Please try again!");
-            }
-            Console.WriteLine("Applying clean up hack.... \n");
-            File.Delete(@"C:\Users\carls\Desktop\ToDo.txt");
-            File.Move(@"C:\Users\carls\Desktop\ToDo2.txt", @"C:\Users\carls\Desktop\ToDo.txt");
-            if (postrun == 1)
-                PostRun();
-        }
-
-        static void ExperimentToDoAdd(List<todo>todoList)
-        {
-            Console.WriteLine("EXPERIMENTAL TODO LIST!!!\n");
             Console.Write("Enter the title of the task: ");
             string title = Console.ReadLine();
             Console.Write("Enter the description of the task: ");
@@ -189,7 +84,7 @@ namespace TodoApp
             if (postrun == 1)
                 PostRun();
         }
-        static void ViewExperimentToDo(List<todo>todoList)
+        static void ViewToDo(List<todo>todoList)
         {
             todo t;
             Console.WriteLine("{0,-5}{1,-30}{2,-75}", "No.", "Title", "Description");
@@ -201,11 +96,10 @@ namespace TodoApp
             if (postrun == 1)
                 PostRun();
         }
-        static void RemoveExperimentToDo(List<todo>todoList)
+        static void RemoveToDo(List<todo>todoList)
         {
-            //todo t;
             postrun = 0;
-            ViewExperimentToDo(todoList);
+            ViewToDo(todoList);
             postrun = 1;
             Console.Write("\nEnter the Task Number to remove: " );
             int remove = Convert.ToInt32(Console.ReadLine());
