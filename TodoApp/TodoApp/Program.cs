@@ -11,6 +11,7 @@ namespace TodoApp
 {
     class Program
     {
+        public static int postrun = 1;
         static void Main(string[] args)
         {
             //List<todo> todoList = new List<todo>();
@@ -37,7 +38,9 @@ namespace TodoApp
                 }
                 else if (option == 3)
                 {
+                    postrun = 0;
                     ReadFile();
+                    postrun = 1;
                     Console.Write("\nSelect the task number to delete: ");
                     int remove = Convert.ToInt32(Console.ReadLine());
                     RemoveToDo(remove);
@@ -53,6 +56,10 @@ namespace TodoApp
                 else if (option == 6)
                 {
                     ViewExperimentToDo(todoList);
+                }
+                else if (option == 7)
+                {
+                    RemoveExperimentToDo(todoList);
                 }
                 else
                 {
@@ -74,6 +81,7 @@ namespace TodoApp
             Console.WriteLine("Note: All objects created and viewed in the section below are stored in a different file.\n");
             Console.WriteLine("5. [EXPERIMENTAL!] Add new task to experimental To-Do list");
             Console.WriteLine("6. [EXPERIMENTAL!] View experimental To-Do list");
+            Console.WriteLine("7. [EXPERIMENTAL!] Remove task from experimental To-Do list");
             Console.WriteLine("----------------------------------------------------------------------------------------------");
             Console.Write("\nSelect your option: ");
             int option = Convert.ToInt32(Console.ReadLine());
@@ -87,7 +95,8 @@ namespace TodoApp
             file.WriteLine(task);
             Console.WriteLine("Closing File....(Step 3/3)");
             file.Close();
-            PostRun();
+            if (postrun == 1)
+                PostRun();
             return true;
         }
         
@@ -113,7 +122,8 @@ namespace TodoApp
 
                 file.Close();
                 Console.WriteLine("");
-                PostRun();
+                if (postrun == 1)
+                    PostRun();
             }
         }
         
@@ -151,7 +161,8 @@ namespace TodoApp
             Console.WriteLine("Applying clean up hack.... \n");
             File.Delete(@"C:\Users\carls\Desktop\ToDo.txt");
             File.Move(@"C:\Users\carls\Desktop\ToDo2.txt", @"C:\Users\carls\Desktop\ToDo.txt");
-            PostRun();
+            if (postrun == 1)
+                PostRun();
         }
 
         static void ExperimentToDoAdd(List<todo>todoList)
@@ -165,7 +176,8 @@ namespace TodoApp
             t = new todo(title, desc);
             todoList.Add(t);
             WriteToXmlFile<List<todo>>(@"C:\Users\carls\Desktop\ToDo.xml", todoList);
-            PostRun();
+            if (postrun == 1)
+                PostRun();
         }
         static void ViewExperimentToDo(List<todo>todoList)
         {
@@ -176,7 +188,20 @@ namespace TodoApp
                 t = todoList[i];
                 Console.WriteLine("{0,-5}{1,-30}{2,-75}", (i + 1) + ". ", t.Title, t.Desc);
             }
-            PostRun();
+            if (postrun == 1)
+                PostRun();
+        }
+        static void RemoveExperimentToDo(List<todo>todoList)
+        {
+            //todo t;
+            postrun = 0;
+            ViewExperimentToDo(todoList);
+            postrun = 1;
+            Console.Write("\nEnter the Task Number to remove: " );
+            int remove = Convert.ToInt32(Console.ReadLine());
+            todoList.RemoveAt(remove - 1);
+            if (postrun == 1)
+                PostRun();
         }
         /// <summary>
         /// Writes the given object instance to an XML file.
@@ -237,6 +262,8 @@ namespace TodoApp
             {
                 Environment.Exit(0);
             }
+            else
+                postrun = 1;
         }
     }
 }
