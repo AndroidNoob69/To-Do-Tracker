@@ -27,18 +27,18 @@ namespace TodoApp
                     else
                         Console.WriteLine("An error has occured while adding object in To-Do list");
                 }
-                if (option == 2)
+                else if (option == 2)
                 {
                     ReadFile();
                 }
-                if (option == 3)
+                else if (option == 3)
                 {
                     ReadFile();
                     Console.Write("\nSelect the task number to delete: ");
                     int remove = Convert.ToInt32(Console.ReadLine());
                     RemoveToDo(remove);
                 }
-                if (option == 4)
+                else if (option == 4)
                 {
                     break;
                 }
