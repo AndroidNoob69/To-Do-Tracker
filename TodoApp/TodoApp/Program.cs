@@ -12,10 +12,19 @@ namespace TodoApp
     class Program
     {
         public static int postrun = 1;
+        public static string path = Directory.GetCurrentDirectory();
         static void Main(string[] args)
         {
-            //List<todo> todoList = new List<todo>();
-            List<todo> todoList = ReadFromXmlFile<List<todo>>(@"C:\Users\carls\Desktop\ToDo.xml");
+            List<todo> todoList = new List<todo>();
+            if (!(File.Exists(path + @"\ToDo.xml")))
+            {
+                WriteToXmlFile<List<todo>>(path + @"\ToDo.xml", todoList);
+            }
+            else
+            {
+                todoList = ReadFromXmlFile<List<todo>>(path + @"\ToDo.xml");
+            }
+            //List<todo> todoList = ReadFromXmlFile<List<todo>>(@"C:\Users\carls\Desktop\ToDo.xml");
             Console.WriteLine("Welcome to To-Do App!");
             Console.WriteLine("A command line based program to help track to-do list");
             Console.WriteLine("Created by Carlsen\n");
@@ -47,6 +56,7 @@ namespace TodoApp
                 }
                 else if (option == 4)
                 {
+                    WriteToXmlFile<List<todo>>(path + @"\ToDo.xml", todoList);
                     break;
                 }
                 else if (option == 5)
@@ -175,7 +185,7 @@ namespace TodoApp
             todo t;
             t = new todo(title, desc);
             todoList.Add(t);
-            WriteToXmlFile<List<todo>>(@"C:\Users\carls\Desktop\ToDo.xml", todoList);
+            WriteToXmlFile<List<todo>>(path + @"\ToDo.xml", todoList);
             if (postrun == 1)
                 PostRun();
         }
@@ -200,6 +210,7 @@ namespace TodoApp
             Console.Write("\nEnter the Task Number to remove: " );
             int remove = Convert.ToInt32(Console.ReadLine());
             todoList.RemoveAt(remove - 1);
+            WriteToXmlFile<List<todo>>(path + @"\ToDo.xml", todoList);
             if (postrun == 1)
                 PostRun();
         }
@@ -254,7 +265,7 @@ namespace TodoApp
         static void PostRun()
         {
             Console.WriteLine("\nOperation Completed! Please select an option");
-            Console.WriteLine("1. Return to Main Menu");
+            Console.WriteLine("1. Return to Main Menu (Also clears Console)");
             Console.WriteLine("2. Exit");
             Console.Write("Selection: ");
             int option = Convert.ToInt32(Console.ReadLine());
@@ -263,6 +274,7 @@ namespace TodoApp
                 Environment.Exit(0);
             }
             else
+                Console.Clear();
                 postrun = 1;
         }
     }
