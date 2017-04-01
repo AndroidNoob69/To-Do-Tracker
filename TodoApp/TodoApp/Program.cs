@@ -42,6 +42,10 @@ namespace TodoApp
                 {
                     break;
                 }
+                else
+                {
+                    Console.WriteLine("git gud");
+                }
             }
         }
 
