@@ -60,7 +60,7 @@ namespace TodoApp
 
         static int Menu()
         {
-            Console.WriteLine("--------------------------------------------------------------------------------------------");
+            Console.WriteLine("----------------------------------------------------------------------------------------------");
             Console.WriteLine("                                       Main Menu                                            ");
             Console.WriteLine("\nWhat would you like to do?");
             Console.WriteLine("1. Add new task to To-Do list");
@@ -77,6 +77,8 @@ namespace TodoApp
         }
         static void ToDoAdd(List<todo>todoList)
         {
+            Console.Clear();
+            Console.WriteLine("1. Add new task to To-Do list\n");
             Console.Write("Enter the title of the task: ");
             string title = Console.ReadLine();
             Console.Write("Enter the description of the task: ");
@@ -90,6 +92,8 @@ namespace TodoApp
         }
         static void ViewToDo(List<todo>todoList)
         {
+            Console.Clear();
+            Console.WriteLine("2. View To-Do list\n");
             todo t;
             Console.WriteLine("\n{0,-5}{1,-30}{2,-75}", "No.", "Title", "Description");
             for (int i = 0; i < todoList.Count; i++)
@@ -102,6 +106,7 @@ namespace TodoApp
         }
         static void RemoveToDo(List<todo>todoList)
         {
+            Console.WriteLine("3. Remove item from To-Do list\n");
             postrun = 0;
             ViewToDo(todoList);
             postrun = 1;
@@ -163,7 +168,7 @@ namespace TodoApp
         static void PostRun()
         {
             Console.WriteLine("\nOperation Completed! Please select an option");
-            Console.WriteLine("1. Return to Main Menu (Also clears Console)");
+            Console.WriteLine("1. Return to Main Menu");
             Console.WriteLine("2. Exit");
             Console.Write("Selection: ");
             int option = Convert.ToInt32(Console.ReadLine());
@@ -177,6 +182,8 @@ namespace TodoApp
         }
         static void ViewToDoDev(List<todo> todoList)
         {
+            Console.Clear();
+            Console.WriteLine("5. Developmental Version of viewing To-Do list\n");
             todo t;
             Console.WriteLine("\n{0,-5}{1,-30}", "No.", "Title");
             for (int i = 0; i < todoList.Count; i++)
