@@ -13,6 +13,8 @@ namespace TodoApp
     {
         public static int postrun = 1;
         public static string path = Directory.GetCurrentDirectory();
+        public static int option;
+        public static int rerun = 0;
         static void Main(string[] args)
         {
             List<todo> todoList = new List<todo>();
@@ -29,7 +31,8 @@ namespace TodoApp
             Console.WriteLine("Created by Carlsen\n");
             while (true)
             {
-                int option = Menu();
+                if (rerun == 0)
+                    option = Menu();
                 if (option == 1)
                 {
                     ToDoAdd(todoList);
@@ -167,12 +170,18 @@ namespace TodoApp
         }
         static void PostRun()
         {
+            rerun = 0;
             Console.WriteLine("\nOperation Completed! Please select an option");
             Console.WriteLine("1. Return to Main Menu");
-            Console.WriteLine("2. Exit");
+            Console.WriteLine("2. Re-run operation");
+            Console.WriteLine("3. Exit");
             Console.Write("Selection: ");
-            int option = Convert.ToInt32(Console.ReadLine());
-            if (option == 2)
+            int suboption = Convert.ToInt32(Console.ReadLine());
+            if (suboption == 2)
+            {
+                rerun = 1;
+            }
+            else if (suboption == 3)
             {
                 Environment.Exit(0);
             }
